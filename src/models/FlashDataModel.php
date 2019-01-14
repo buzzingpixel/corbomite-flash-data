@@ -10,8 +10,9 @@ declare(strict_types=1);
 namespace corbomite\flashdata\models;
 
 use DateTime;
+use corbomite\flashdata\interfaces\FlashDataModelInterface;
 
-class FlashDataModel
+class FlashDataModel implements FlashDataModelInterface
 {
     public function __construct(array $props = [])
     {
