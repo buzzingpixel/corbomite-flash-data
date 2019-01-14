@@ -44,6 +44,8 @@ class FlashDataApi implements FlashDataApiInterface
     public function getFlashData(bool $clearData = true): FlashDataStoreModelInterface
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return $this->di->getFromDefinition(GetFlashDataService::class)->get();
+        return $this->di->getFromDefinition(GetFlashDataService::class)->get(
+            $clearData
+        );
     }
 }
