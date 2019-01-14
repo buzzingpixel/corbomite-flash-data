@@ -11,10 +11,12 @@ namespace corbomite\flashdata;
 
 use corbomite\di\Di;
 use corbomite\flashdata\models\FlashDataModel;
-use corbomite\flashdata\services\SetFlashData;
+use corbomite\flashdata\services\GetFlashDataService;
+use corbomite\flashdata\services\SetFlashDataService;
 use corbomite\flashdata\interfaces\FlashDataApiInterface;
 use corbomite\flashdata\interfaces\FlashDataModelInterface;
 use corbomite\flashdata\exceptions\InvalidFlashDataModelException;
+use \corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
 
 class FlashDataApi implements FlashDataApiInterface
 {
@@ -36,6 +38,12 @@ class FlashDataApi implements FlashDataApiInterface
     public function setFlashData(FlashDataModelInterface $model): void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->di->getFromDefinition(SetFlashData::class)->set($model);
+        $this->di->getFromDefinition(SetFlashDataService::class)->set($model);
+    }
+
+    public function getFlashData(bool $clearData = true): FlashDataStoreModelInterface
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return $this->di->getFromDefinition(GetFlashDataService::class)->get();
     }
 }

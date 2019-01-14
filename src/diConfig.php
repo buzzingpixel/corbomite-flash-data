@@ -13,8 +13,10 @@ use Ramsey\Uuid\UuidFactory;
 use buzzingpixel\cookieapi\CookieApi;
 use corbomite\flashdata\FlashDataApi;
 use corbomite\db\Factory as OrmFactory;
-use corbomite\flashdata\services\SetFlashData;
+use corbomite\flashdata\models\FlashDataStoreModel;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use corbomite\flashdata\services\SetFlashDataService;
+use corbomite\flashdata\services\GetFlashDataService;
 use corbomite\flashdata\actions\CreateMigrationsAction;
 
 return [
@@ -27,12 +29,24 @@ return [
     FlashDataApi::class => function () {
         return new FlashDataApi(new Di());
     },
-    SetFlashData::class => function () {
-        return new SetFlashData(
+    SetFlashDataService::class => function () {
+        return new SetFlashDataService(
             Di::get(PDO::class),
             Di::get(CookieApi::class),
             new OrmFactory(),
-            new UuidFactory()
+            new UuidFactory(),
+            Di::get(FlashDataStoreModel::class)
         );
+    },
+    GetFlashDataService::class => function () {
+        return new GetFlashDataService(
+            Di::get(PDO::class),
+            Di::get(CookieApi::class),
+            new OrmFactory(),
+            Di::get(FlashDataStoreModel::class)
+        );
+    },
+    FlashDataStoreModel::class => function () {
+        return new FlashDataStoreModel();
     },
 ];

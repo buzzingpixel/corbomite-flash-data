@@ -17,25 +17,29 @@ use buzzingpixel\cookieapi\CookieApi;
 use corbomite\db\Factory as OrmFactory;
 use corbomite\flashdata\data\FlashDatum\FlashDatum;
 use corbomite\flashdata\interfaces\FlashDataModelInterface;
+use corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
 use corbomite\flashdata\exceptions\InvalidFlashDataModelException;
 
-class SetFlashData
+class SetFlashDataService
 {
     private $pdo;
     private $cookieApi;
     private $ormFactory;
     private $uuidFactory;
+    private $flashDataStoreModel;
 
     public function __construct(
         PDO $pdo,
         CookieApi $cookieApi,
         OrmFactory $ormFactory,
-        UuidFactoryInterface $uuidFactory
+        UuidFactoryInterface $uuidFactory,
+        FlashDataStoreModelInterface $flashDataStoreModel
     ) {
         $this->pdo = $pdo;
         $this->cookieApi = $cookieApi;
         $this->ormFactory = $ormFactory;
         $this->uuidFactory = $uuidFactory;
+        $this->flashDataStoreModel = $flashDataStoreModel;
     }
 
     /**
@@ -85,5 +89,7 @@ class SetFlashData
         $record->added_at_time_zone = $dateTime->getTimezone()->getName();
 
         $orm->persist($record);
+
+        $this->flashDataStoreModel->setStoreItem($model);
     }
 }
