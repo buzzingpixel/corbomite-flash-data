@@ -69,10 +69,13 @@ class SetFlashDataService
             throw new InvalidFlashDataModelException();
         }
 
+        $key = $keyCookie->value();
+        $name = $model->name();
+
         $sql = 'DELETE FROM flash_data WHERE guid = :guid AND name = :name';
         $q = $this->pdo->prepare($sql);
-        $q->bindParam(':guid', $keyCookie->value());
-        $q->bindParam(':name', $model->name());
+        $q->bindParam(':guid', $key);
+        $q->bindParam(':name', $name);
         $q->execute();
 
         /** @noinspection PhpUnhandledExceptionInspection */
@@ -82,8 +85,8 @@ class SetFlashDataService
         $orm = $this->ormFactory->makeOrm();
 
         $record = $orm->newRecord(FlashDatum::class);
-        $record->guid = $keyCookie->value();
-        $record->name = $model->name();
+        $record->guid = $key;
+        $record->name = $name;
         $record->data = json_encode($model->data());
         $record->added_at = $dateTime->format('Y-m-d H:i:s');
         $record->added_at_time_zone = $dateTime->getTimezone()->getName();

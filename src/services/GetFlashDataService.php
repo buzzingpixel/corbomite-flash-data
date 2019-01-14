@@ -56,8 +56,10 @@ class GetFlashDataService
             return $this->flashDataStoreModel;
         }
 
+        $key = $keyCookie->value();
+
         $records = $this->ormFactory->makeOrm()->select(FlashDatum::class)
-            ->where('guid =', $keyCookie->value())
+            ->where('guid =', $key)
             ->fetchRecords();
 
         foreach($records as $record) {
@@ -80,7 +82,7 @@ class GetFlashDataService
         if ($clearData) {
             $sql = 'DELETE FROM flash_data WHERE guid = :guid';
             $q = $this->pdo->prepare($sql);
-            $q->bindParam(':guid', $keyCookie->value());
+            $q->bindParam(':guid', $key);
             $q->execute();
         }
 
