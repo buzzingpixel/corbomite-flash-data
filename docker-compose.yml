@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+  web:
+    image: buzzingpixel/nginx:latest
+    container_name: nginx-corbomite-flash-data
+    environment:
+      HOSTNAME: nginx-corbomite-flash-data
+    ports:
+      - "16159:80"
+    volumes:
+      - .:/app:delegated
+      - ./dev/null:/app/.git:delegated
+      - ./dev/null:/app/.idea:delegated
+      - ./serverConfig/nginx/site.test.conf:/etc/nginx/conf.d/site.conf:delegated
   php:
     image: buzzingpixel/php7.2:latest
     container_name: php-corbomite-flash-data
