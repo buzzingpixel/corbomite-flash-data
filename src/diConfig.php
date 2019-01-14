@@ -18,6 +18,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use corbomite\flashdata\services\SetFlashDataService;
 use corbomite\flashdata\services\GetFlashDataService;
 use corbomite\flashdata\actions\CreateMigrationsAction;
+use corbomite\flashdata\services\FlashDataGarbageCollectionService;
 
 return [
     CreateMigrationsAction::class => function () {
@@ -48,5 +49,8 @@ return [
     },
     FlashDataStoreModel::class => function () {
         return new FlashDataStoreModel();
+    },
+    FlashDataGarbageCollectionService::class => function () {
+        return new FlashDataGarbageCollectionService(Di::get(PDO::class));
     },
 ];
