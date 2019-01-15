@@ -1,6 +1,6 @@
 {
     "name": "buzzingpixel/corbomite-flash-data",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Corbomite Flash Data",
     "authors": [
         {
@@ -15,7 +15,7 @@
         "buzzingpixel/corbomite-di": "^1.0",
         "buzzingpixel/corbomite-migrations": "^1.0",
         "buzzingpixel/corbomite-db": "^1.0",
-        "buzzingpixel/cookie-api": "^1.1",
+        "buzzingpixel/cookie-api": "^1.1.1",
         "ramsey/uuid": "^3.8"
     },
     "require-dev": {

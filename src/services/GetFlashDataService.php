@@ -12,10 +12,10 @@ namespace corbomite\flashdata\services;
 use DateTime;
 use DateTimeZone;
 use corbomite\db\PDO;
-use buzzingpixel\cookieapi\CookieApi;
 use corbomite\db\Factory as OrmFactory;
 use corbomite\flashdata\models\FlashDataModel;
 use corbomite\flashdata\data\FlashDatum\FlashDatum;
+use buzzingpixel\cookieapi\interfaces\CookieApiInterface;
 use corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
 
 class GetFlashDataService
@@ -27,7 +27,7 @@ class GetFlashDataService
 
     public function __construct(
         PDO $pdo,
-        CookieApi $cookieApi,
+        CookieApiInterface $cookieApi,
         OrmFactory $ormFactory,
         FlashDataStoreModelInterface $flashDataStoreModel
     ) {
@@ -62,7 +62,7 @@ class GetFlashDataService
             ->where('guid =', $key)
             ->fetchRecords();
 
-        foreach($records as $record) {
+        foreach ($records as $record) {
             $data = json_decode($record->data, true);
 
             /** @noinspection PhpUnhandledExceptionInspection */
