@@ -55,7 +55,9 @@ class SetFlashDataService
      */
     public function set(FlashDataModelInterface $model): void
     {
-        if (! $keyCookie = $this->cookieApi->retrieveCookie('flash_data_key')) {
+        $keyCookie = $this->cookieApi->retrieveCookie('flash_data_key');
+
+        if (! $keyCookie || ! $keyCookie->value()) {
             /** @noinspection PhpUnhandledExceptionInspection */
             $keyCookie = $this->cookieApi->makeCookie(
                 'flash_data_key',
