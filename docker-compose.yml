@@ -44,7 +44,7 @@ services:
     ports:
       - "37388:3306"
   utility:
-    image: ubuntu:latest
+    image: buzzingpixel/utility:latest
     container_name: utility-corbomite-flash-data
     volumes:
       - .:/app:delegated
