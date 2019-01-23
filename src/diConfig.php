@@ -36,15 +36,16 @@ return [
             Di::get(PDO::class),
             Di::get(CookieApi::class),
             new OrmFactory(),
-            new UuidFactory(),
+            Di::get('UuidFactoryWithOrderedTimeCodec'),
             Di::get(FlashDataStoreModel::class)
         );
     },
     GetFlashDataService::class => function () {
         return new GetFlashDataService(
             Di::get(PDO::class),
-            Di::get(CookieApi::class),
             new OrmFactory(),
+            Di::get(CookieApi::class),
+            Di::get('UuidFactoryWithOrderedTimeCodec'),
             Di::get(FlashDataStoreModel::class)
         );
     },

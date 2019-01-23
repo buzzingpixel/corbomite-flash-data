@@ -14,6 +14,7 @@ use corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
 
 class FlashDataStoreModel implements FlashDataStoreModelInterface
 {
+    /** @var array|null */
     private $store;
 
     public function store(?array $store = null): ?array
@@ -25,7 +26,7 @@ class FlashDataStoreModel implements FlashDataStoreModelInterface
         return $this->store;
     }
 
-    public function setStoreItem(FlashDataModelInterface $model)
+    public function setStoreItem(FlashDataModelInterface $model): void
     {
         if ($this->store === null) {
             $this->store = [];

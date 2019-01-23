@@ -12,6 +12,7 @@ namespace corbomite\flashdata\services;
 use DateTime;
 use DateTimeZone;
 use corbomite\db\PDO;
+use Ramsey\Uuid\UuidFactoryInterface;
 use corbomite\db\Factory as OrmFactory;
 use corbomite\flashdata\models\FlashDataModel;
 use corbomite\flashdata\data\FlashDatum\FlashDatum;
@@ -23,17 +24,20 @@ class GetFlashDataService
     private $pdo;
     private $cookieApi;
     private $ormFactory;
+    private $uuidFactory;
     private $flashDataStoreModel;
 
     public function __construct(
         PDO $pdo,
-        CookieApiInterface $cookieApi,
         OrmFactory $ormFactory,
+        CookieApiInterface $cookieApi,
+        UuidFactoryInterface $uuidFactory,
         FlashDataStoreModelInterface $flashDataStoreModel
     ) {
         $this->pdo = $pdo;
         $this->cookieApi = $cookieApi;
         $this->ormFactory = $ormFactory;
+        $this->uuidFactory = $uuidFactory;
         $this->flashDataStoreModel = $flashDataStoreModel;
     }
 
@@ -56,10 +60,10 @@ class GetFlashDataService
             return $this->flashDataStoreModel;
         }
 
-        $key = $keyCookie->value();
+        $key = $this->uuidFactory->fromString($keyCookie->value())->getBytes();
 
         $records = $this->ormFactory->makeOrm()->select(FlashDatum::class)
-            ->where('guid =', $key)
+            ->where('guid = ', $key)
             ->fetchRecords();
 
         foreach ($records as $record) {
@@ -71,12 +75,13 @@ class GetFlashDataService
                 new DateTimeZone($record->added_at_time_zone)
             );
 
-            $this->flashDataStoreModel->setStoreItem(new FlashDataModel([
-                'guid' => $record->guid,
-                'name' => $record->name,
-                'data' => is_array($data) ? $data : [],
-                'addedAt' =>$addedAt,
-            ]));
+            $model = new FlashDataModel();
+            $model->setGuidAsBytes($record->guid);
+            $model->name($record->name);
+            $model->data(is_array($data) ? $data : []);
+            $model->addedAt($addedAt);
+
+            $this->flashDataStoreModel->setStoreItem($model);
         }
 
         if ($clearData) {

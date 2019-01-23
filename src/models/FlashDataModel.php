@@ -10,10 +10,13 @@ declare(strict_types=1);
 namespace corbomite\flashdata\models;
 
 use DateTime;
+use corbomite\db\traits\UuidTrait;
 use corbomite\flashdata\interfaces\FlashDataModelInterface;
 
 class FlashDataModel implements FlashDataModelInterface
 {
+    use UuidTrait;
+
     public function __construct(array $props = [])
     {
         foreach ($props as $key => $val) {
@@ -21,25 +24,18 @@ class FlashDataModel implements FlashDataModelInterface
         }
     }
 
-    private $guid = '';
-
-    public function guid(?string $guid = null): string
-    {
-        return $this->guid = $guid !== null ? $guid : $this->guid;
-    }
-
     private $name = '';
 
     public function name(?string $name = null): string
     {
-        return $this->name = $name !== null ? $name : $this->name;
+        return $this->name = $name ?? $this->name;
     }
 
     private $data = [];
 
     public function data(?array $data = null): array
     {
-        return $this->data = $data !== null ? $data : $this->data;
+        return $this->data = $data ?? $this->data;
     }
 
     public function dataItem(string $key, $val = null)
@@ -51,10 +47,11 @@ class FlashDataModel implements FlashDataModelInterface
         return $this->data[$key] ?? null;
     }
 
+    /** @var \DateTime|null */
     private $addedAt;
 
     public function addedAt(?DateTime $addedAt = null): ?DateTime
     {
-        return $this->addedAt = $addedAt !== null ? $addedAt : $this->addedAt;
+        return $this->addedAt = $addedAt ?? $this->addedAt;
     }
 }

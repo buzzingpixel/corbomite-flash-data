@@ -30,7 +30,7 @@ interface FlashDataApiInterface
     /**
      * Gets flash data for the current user
      * @param bool $clearData Clears all user flash data if true
-     * @return FlashDataModelInterface[]
+     * @return FlashDataStoreModelInterface
      */
     public function getFlashData(bool $clearData = true): FlashDataStoreModelInterface;
 }
