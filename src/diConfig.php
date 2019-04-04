@@ -8,6 +8,8 @@ use corbomite\db\Factory as OrmFactory;
 use corbomite\db\PDO;
 use corbomite\flashdata\actions\CreateMigrationsAction;
 use corbomite\flashdata\FlashDataApi;
+use corbomite\flashdata\interfaces\FlashDataApiInterface;
+use corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
 use corbomite\flashdata\models\FlashDataStoreModel;
 use corbomite\flashdata\services\FlashDataGarbageCollectionService;
 use corbomite\flashdata\services\GetFlashDataService;
@@ -18,6 +20,9 @@ use Ramsey\Uuid\UuidFactory;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 return [
+    FlashDataApiInterface::class => static function (ContainerInterface $di) {
+        return $di->get(FlashDataApi::class);
+    },
     CreateMigrationsAction::class => static function () {
         $appBasePath = null;
 
@@ -57,6 +62,9 @@ return [
             new OrmFactory(),
             $di->get(FlashDataStoreModel::class)
         );
+    },
+    FlashDataStoreModelInterface::class => static function (ContainerInterface $di) {
+        return $di->get(FlashDataStoreModel::class);
     },
     FlashDataStoreModel::class => static function () {
         return new FlashDataStoreModel();
