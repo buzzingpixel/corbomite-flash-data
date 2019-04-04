@@ -1,0 +1,4 @@
+@echo off
+
+docker-compose -f docker-compose.yml -p corbomite-flash-data up -d
+docker exec -it --user root --workdir /app php-corbomite-flash-data bash -c "cd /app && composer install"
