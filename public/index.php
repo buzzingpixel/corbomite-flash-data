@@ -5,12 +5,20 @@ declare(strict_types=1);
 use corbomite\di\Di;
 use corbomite\flashdata\FlashDataApi;
 
-/** @noinspection PhpUnhandledExceptionInspection */
-$flashDataApi = Di::get(FlashDataApi::class);
+putenv('ENCRYPTION_KEY=1234567890qwertyuiopasdfghjklzxc');
+putenv('DB_HOST=db');
+putenv('DB_DATABASE=site');
+putenv('DB_USER=site');
+putenv('DB_PASSWORD=secret');
+putenv('CORBOMITE_DB_DATA_NAMESPACE=corbomite\flashdata\data');
+putenv('CORBOMITE_DB_DATA_DIRECTORY=./src/data');
 
-// $model = $flashDataApi->makeFlashDataModel([
-//     'name' => 'test_flash_data_key',
-// ]);
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+/** @noinspection PhpUnhandledExceptionInspection */
+$flashDataApi = Di::diContainer()->get(FlashDataApi::class);
+
+// $model = $flashDataApi->makeFlashDataModel(['name' => 'test_flash_data_key']);
 // $model->dataItem('myItem', 'myVal');
 // $flashDataApi->setFlashData($model);
 // die;

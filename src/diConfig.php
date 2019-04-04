@@ -5,7 +5,6 @@ declare(strict_types=1);
 use buzzingpixel\cookieapi\CookieApi;
 use corbomite\db\Factory as OrmFactory;
 use corbomite\db\PDO;
-use corbomite\di\Di;
 use corbomite\flashdata\actions\CreateMigrationsAction;
 use corbomite\flashdata\FlashDataApi;
 use corbomite\flashdata\models\FlashDataStoreModel;
@@ -13,6 +12,7 @@ use corbomite\flashdata\services\FlashDataGarbageCollectionService;
 use corbomite\flashdata\services\GetFlashDataService;
 use corbomite\flashdata\services\SetFlashDataService;
 use corbomite\flashdata\twigextensions\FlashDataTwigExtension;
+use Psr\Container\ContainerInterface;
 use Ramsey\Uuid\UuidFactory;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
@@ -23,33 +23,37 @@ return [
             new ConsoleOutput()
         );
     },
-    FlashDataApi::class => static function () {
-        return new FlashDataApi(new Di());
+    FlashDataApi::class => static function (ContainerInterface $di) {
+        return new FlashDataApi($di);
     },
-    SetFlashDataService::class => static function () {
+    SetFlashDataService::class => static function (ContainerInterface $di) {
         return new SetFlashDataService(
-            Di::get(PDO::class),
-            Di::get(CookieApi::class),
+            $di->get(PDO::class),
+            $di->get(CookieApi::class),
             new OrmFactory(),
             new UuidFactory(),
-            Di::get(FlashDataStoreModel::class)
+            $di->get(FlashDataStoreModel::class)
         );
     },
-    GetFlashDataService::class => static function () {
+    GetFlashDataService::class => static function (ContainerInterface $di) {
         return new GetFlashDataService(
-            Di::get(PDO::class),
-            Di::get(CookieApi::class),
+            $di->get(PDO::class),
+            $di->get(CookieApi::class),
             new OrmFactory(),
-            Di::get(FlashDataStoreModel::class)
+            $di->get(FlashDataStoreModel::class)
         );
     },
     FlashDataStoreModel::class => static function () {
         return new FlashDataStoreModel();
     },
-    FlashDataGarbageCollectionService::class => static function () {
-        return new FlashDataGarbageCollectionService(Di::get(PDO::class));
+    FlashDataGarbageCollectionService::class => static function (ContainerInterface $di) {
+        return new FlashDataGarbageCollectionService(
+            $di->get(PDO::class)
+        );
     },
-    FlashDataTwigExtension::class => static function () {
-        return new FlashDataTwigExtension(Di::get(FlashDataApi::class));
+    FlashDataTwigExtension::class => static function (ContainerInterface $di) {
+        return new FlashDataTwigExtension(
+            $di->get(FlashDataApi::class)
+        );
     },
 ];
