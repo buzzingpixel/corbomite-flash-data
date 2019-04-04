@@ -1,19 +1,17 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\flashdata\models;
 
-use DateTime;
 use corbomite\flashdata\interfaces\FlashDataModelInterface;
+use DateTime;
 
 class FlashDataModel implements FlashDataModelInterface
 {
+    /**
+     * @param mixed[] $props
+     */
     public function __construct(array $props = [])
     {
         foreach ($props as $key => $val) {
@@ -21,27 +19,40 @@ class FlashDataModel implements FlashDataModelInterface
         }
     }
 
+    /** @var string */
     private $guid = '';
 
-    public function guid(?string $guid = null): string
+    public function guid(?string $guid = null) : string
     {
-        return $this->guid = $guid !== null ? $guid : $this->guid;
+        return $this->guid = $guid ?? $this->guid;
     }
 
+    /** @var string */
     private $name = '';
 
-    public function name(?string $name = null): string
+    public function name(?string $name = null) : string
     {
-        return $this->name = $name !== null ? $name : $this->name;
+        return $this->name = $name ?? $this->name;
     }
 
+    /** @var mixed[] */
     private $data = [];
 
-    public function data(?array $data = null): array
+    /**
+     * @param mixed[]|null $data
+     *
+     * @return mixed[]
+     */
+    public function data(?array $data = null) : array
     {
-        return $this->data = $data !== null ? $data : $this->data;
+        return $this->data = $data ?? $this->data;
     }
 
+    /**
+     * @param mixed $val
+     *
+     * @return mixed
+     */
     public function dataItem(string $key, $val = null)
     {
         if ($val !== null) {
@@ -51,10 +62,11 @@ class FlashDataModel implements FlashDataModelInterface
         return $this->data[$key] ?? null;
     }
 
+    /** @var ?DateTime */
     private $addedAt;
 
-    public function addedAt(?DateTime $addedAt = null): ?DateTime
+    public function addedAt(?DateTime $addedAt = null) : ?DateTime
     {
-        return $this->addedAt = $addedAt !== null ? $addedAt : $this->addedAt;
+        return $this->addedAt = $addedAt ?? $this->addedAt;
     }
 }

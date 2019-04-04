@@ -1,11 +1,6 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\flashdata\models;
 
@@ -14,9 +9,15 @@ use corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
 
 class FlashDataStoreModel implements FlashDataStoreModelInterface
 {
+    /** @var ?array */
     private $store;
 
-    public function store(?array $store = null): ?array
+    /**
+     * @param mixed[]|null $store
+     *
+     * @return mixed[]|null
+     */
+    public function store(?array $store = null) : ?array
     {
         if ($store !== null) {
             $this->store = $store;
@@ -25,7 +26,7 @@ class FlashDataStoreModel implements FlashDataStoreModelInterface
         return $this->store;
     }
 
-    public function setStoreItem(FlashDataModelInterface $model)
+    public function setStoreItem(FlashDataModelInterface $model) : void
     {
         if ($this->store === null) {
             $this->store = [];
@@ -34,7 +35,7 @@ class FlashDataStoreModel implements FlashDataStoreModelInterface
         $this->store[$model->name()] = $model;
     }
 
-    public function getStoreItem(string $name): ?FlashDataModelInterface
+    public function getStoreItem(string $name) : ?FlashDataModelInterface
     {
         if ($this->store === null) {
             return null;

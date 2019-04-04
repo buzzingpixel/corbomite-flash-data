@@ -1,17 +1,12 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
 class CreateFlashDataTable extends AbstractMigration
 {
-    public function change()
+    public function change() : void
     {
         $this->table('flash_data')
             ->addColumn('guid', 'string')

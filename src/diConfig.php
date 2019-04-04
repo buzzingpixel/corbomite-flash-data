@@ -1,37 +1,32 @@
 <?php
+
 declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
-
-use corbomite\di\Di;
-use corbomite\db\PDO;
-use Ramsey\Uuid\UuidFactory;
 use buzzingpixel\cookieapi\CookieApi;
-use corbomite\flashdata\FlashDataApi;
 use corbomite\db\Factory as OrmFactory;
-use corbomite\flashdata\models\FlashDataStoreModel;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use corbomite\flashdata\services\SetFlashDataService;
-use corbomite\flashdata\services\GetFlashDataService;
+use corbomite\db\PDO;
+use corbomite\di\Di;
 use corbomite\flashdata\actions\CreateMigrationsAction;
-use corbomite\flashdata\twigextensions\FlashDataTwigExtension;
+use corbomite\flashdata\FlashDataApi;
+use corbomite\flashdata\models\FlashDataStoreModel;
 use corbomite\flashdata\services\FlashDataGarbageCollectionService;
+use corbomite\flashdata\services\GetFlashDataService;
+use corbomite\flashdata\services\SetFlashDataService;
+use corbomite\flashdata\twigextensions\FlashDataTwigExtension;
+use Ramsey\Uuid\UuidFactory;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 return [
-    CreateMigrationsAction::class => function () {
+    CreateMigrationsAction::class => static function () {
         return new CreateMigrationsAction(
             __DIR__ . '/migrations',
             new ConsoleOutput()
         );
     },
-    FlashDataApi::class => function () {
+    FlashDataApi::class => static function () {
         return new FlashDataApi(new Di());
     },
-    SetFlashDataService::class => function () {
+    SetFlashDataService::class => static function () {
         return new SetFlashDataService(
             Di::get(PDO::class),
             Di::get(CookieApi::class),
@@ -40,7 +35,7 @@ return [
             Di::get(FlashDataStoreModel::class)
         );
     },
-    GetFlashDataService::class => function () {
+    GetFlashDataService::class => static function () {
         return new GetFlashDataService(
             Di::get(PDO::class),
             Di::get(CookieApi::class),
@@ -48,13 +43,13 @@ return [
             Di::get(FlashDataStoreModel::class)
         );
     },
-    FlashDataStoreModel::class => function () {
+    FlashDataStoreModel::class => static function () {
         return new FlashDataStoreModel();
     },
-    FlashDataGarbageCollectionService::class => function () {
+    FlashDataGarbageCollectionService::class => static function () {
         return new FlashDataGarbageCollectionService(Di::get(PDO::class));
     },
-    FlashDataTwigExtension::class => function () {
+    FlashDataTwigExtension::class => static function () {
         return new FlashDataTwigExtension(Di::get(FlashDataApi::class));
     },
 ];

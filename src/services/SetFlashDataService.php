@@ -1,31 +1,32 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\flashdata\services;
 
-use DateTime;
-use DateTimeZone;
-use corbomite\db\PDO;
-use Ramsey\Uuid\UuidFactoryInterface;
-use corbomite\db\Factory as OrmFactory;
-use corbomite\flashdata\data\FlashDatum\FlashDatum;
 use buzzingpixel\cookieapi\interfaces\CookieApiInterface;
+use corbomite\db\Factory as OrmFactory;
+use corbomite\db\PDO;
+use corbomite\flashdata\data\FlashDatum\FlashDatum;
+use corbomite\flashdata\exceptions\InvalidFlashDataModelException;
 use corbomite\flashdata\interfaces\FlashDataModelInterface;
 use corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
-use corbomite\flashdata\exceptions\InvalidFlashDataModelException;
+use DateTime;
+use DateTimeZone;
+use Ramsey\Uuid\UuidFactoryInterface;
+use function json_encode;
 
 class SetFlashDataService
 {
+    /** @var PDO */
     private $pdo;
+    /** @var CookieApiInterface */
     private $cookieApi;
+    /** @var OrmFactory */
     private $ormFactory;
+    /** @var UuidFactoryInterface */
     private $uuidFactory;
+    /** @var FlashDataStoreModelInterface */
     private $flashDataStoreModel;
 
     public function __construct(
@@ -35,17 +36,17 @@ class SetFlashDataService
         UuidFactoryInterface $uuidFactory,
         FlashDataStoreModelInterface $flashDataStoreModel
     ) {
-        $this->pdo = $pdo;
-        $this->cookieApi = $cookieApi;
-        $this->ormFactory = $ormFactory;
-        $this->uuidFactory = $uuidFactory;
+        $this->pdo                 = $pdo;
+        $this->cookieApi           = $cookieApi;
+        $this->ormFactory          = $ormFactory;
+        $this->uuidFactory         = $uuidFactory;
         $this->flashDataStoreModel = $flashDataStoreModel;
     }
 
     /**
      * @throws InvalidFlashDataModelException
      */
-    public function __invoke(FlashDataModelInterface $model): void
+    public function __invoke(FlashDataModelInterface $model) : void
     {
         $this->set($model);
     }
@@ -53,7 +54,7 @@ class SetFlashDataService
     /**
      * @throws InvalidFlashDataModelException
      */
-    public function set(FlashDataModelInterface $model): void
+    public function set(FlashDataModelInterface $model) : void
     {
         $keyCookie = $this->cookieApi->retrieveCookie('flash_data_key');
 
@@ -71,11 +72,11 @@ class SetFlashDataService
             throw new InvalidFlashDataModelException();
         }
 
-        $key = $keyCookie->value();
+        $key  = $keyCookie->value();
         $name = $model->name();
 
         $sql = 'DELETE FROM flash_data WHERE guid = :guid AND name = :name';
-        $q = $this->pdo->prepare($sql);
+        $q   = $this->pdo->prepare($sql);
         $q->bindParam(':guid', $key);
         $q->bindParam(':name', $name);
         $q->execute();
@@ -86,11 +87,11 @@ class SetFlashDataService
 
         $orm = $this->ormFactory->makeOrm();
 
-        $record = $orm->newRecord(FlashDatum::class);
-        $record->guid = $key;
-        $record->name = $name;
-        $record->data = json_encode($model->data());
-        $record->added_at = $dateTime->format('Y-m-d H:i:s');
+        $record                     = $orm->newRecord(FlashDatum::class);
+        $record->guid               = $key;
+        $record->name               = $name;
+        $record->data               = json_encode($model->data());
+        $record->added_at           = $dateTime->format('Y-m-d H:i:s');
         $record->added_at_time_zone = $dateTime->getTimezone()->getName();
 
         $orm->persist($record);

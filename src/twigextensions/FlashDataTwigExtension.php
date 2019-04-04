@@ -1,20 +1,16 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2018 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\flashdata\twigextensions;
 
-use Twig_Function;
-use Twig_Extension;
 use corbomite\flashdata\interfaces\FlashDataApiInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class FlashDataTwigExtension extends Twig_Extension
+class FlashDataTwigExtension extends AbstractExtension
 {
+    /** @var FlashDataApiInterface */
     private $flashDataApi;
 
     public function __construct(FlashDataApiInterface $flashDataApi)
@@ -22,12 +18,15 @@ class FlashDataTwigExtension extends Twig_Extension
         $this->flashDataApi = $flashDataApi;
     }
 
-    public function getFunctions(): array
+    /**
+     * @return TwigFunction[]
+     */
+    public function getFunctions() : array
     {
-        return [new Twig_Function('flashDataApi', [$this, 'flashDataApi'])];
+        return [new TwigFunction('flashDataApi', [$this, 'flashDataApi'])];
     }
 
-    public function flashDataApi(): FlashDataApiInterface
+    public function flashDataApi() : FlashDataApiInterface
     {
         return $this->flashDataApi;
     }

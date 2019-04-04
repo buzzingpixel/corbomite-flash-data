@@ -1,28 +1,29 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\flashdata\services;
 
+use buzzingpixel\cookieapi\interfaces\CookieApiInterface;
+use corbomite\db\Factory as OrmFactory;
+use corbomite\db\PDO;
+use corbomite\flashdata\data\FlashDatum\FlashDatum;
+use corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
+use corbomite\flashdata\models\FlashDataModel;
 use DateTime;
 use DateTimeZone;
-use corbomite\db\PDO;
-use corbomite\db\Factory as OrmFactory;
-use corbomite\flashdata\models\FlashDataModel;
-use corbomite\flashdata\data\FlashDatum\FlashDatum;
-use buzzingpixel\cookieapi\interfaces\CookieApiInterface;
-use corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
+use function is_array;
+use function json_decode;
 
 class GetFlashDataService
 {
+    /** @var PDO */
     private $pdo;
+    /** @var CookieApiInterface */
     private $cookieApi;
+    /** @var OrmFactory */
     private $ormFactory;
+    /** @var FlashDataStoreModelInterface */
     private $flashDataStoreModel;
 
     public function __construct(
@@ -31,18 +32,18 @@ class GetFlashDataService
         OrmFactory $ormFactory,
         FlashDataStoreModelInterface $flashDataStoreModel
     ) {
-        $this->pdo = $pdo;
-        $this->cookieApi = $cookieApi;
-        $this->ormFactory = $ormFactory;
+        $this->pdo                 = $pdo;
+        $this->cookieApi           = $cookieApi;
+        $this->ormFactory          = $ormFactory;
         $this->flashDataStoreModel = $flashDataStoreModel;
     }
 
-    public function __invoke(bool $clearData = true): FlashDataStoreModelInterface
+    public function __invoke(bool $clearData = true) : FlashDataStoreModelInterface
     {
         return $this->get($clearData);
     }
 
-    public function get(bool $clearData = true): FlashDataStoreModelInterface
+    public function get(bool $clearData = true) : FlashDataStoreModelInterface
     {
         $keyCookie = $this->cookieApi->retrieveCookie('flash_data_key');
 
@@ -81,7 +82,7 @@ class GetFlashDataService
 
         if ($clearData) {
             $sql = 'DELETE FROM flash_data WHERE guid = :guid';
-            $q = $this->pdo->prepare($sql);
+            $q   = $this->pdo->prepare($sql);
             $q->bindParam(':guid', $key);
             $q->execute();
         }
