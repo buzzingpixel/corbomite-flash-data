@@ -12,6 +12,7 @@ putenv('DB_USER=site');
 putenv('DB_PASSWORD=secret');
 
 require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__) . '/devMode.php';
 
 /** @noinspection PhpUnhandledExceptionInspection */
 $flashDataApi = Di::diContainer()->get(FlashDataApi::class);
