@@ -10,8 +10,6 @@ putenv('DB_HOST=db');
 putenv('DB_DATABASE=site');
 putenv('DB_USER=site');
 putenv('DB_PASSWORD=secret');
-putenv('CORBOMITE_DB_DATA_NAMESPACE=corbomite\flashdata\data');
-putenv('CORBOMITE_DB_DATA_DIRECTORY=./src/data');
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 

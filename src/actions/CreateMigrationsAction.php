@@ -9,7 +9,6 @@ use LogicException;
 use RegexIterator;
 use Symfony\Component\Console\Output\OutputInterface;
 use function copy;
-use function defined;
 use function file_exists;
 use function realpath;
 use function str_replace;
@@ -20,26 +19,23 @@ class CreateMigrationsAction
     private $srcDir;
     /** @var OutputInterface */
     private $output;
+    /** @var string $appBasePath */
+    private $appBasePath;
 
-    public function __construct(
-        string $srcDir,
-        OutputInterface $output
-    ) {
-        $this->srcDir = $srcDir;
-        $this->output = $output;
+    public function __construct(string $srcDir, OutputInterface $output, string $appBasePath)
+    {
+        $this->srcDir      = $srcDir;
+        $this->output      = $output;
+        $this->appBasePath = $appBasePath;
     }
 
     public function __invoke() : void
     {
-        if (! defined('APP_BASE_PATH')) {
-            throw new LogicException('APP_BASE_PATH must be defined');
-        }
-
-        if (! file_exists(APP_BASE_PATH . '/phinx.php')) {
+        if (! file_exists($this->appBasePath . '/phinx.php')) {
             throw new LogicException('phinx.php must be present in your project');
         }
 
-        $phinxConf = include APP_BASE_PATH . '/phinx.php';
+        $phinxConf = include $this->appBasePath . '/phinx.php';
         $dest      = $phinxConf['paths']['migrations'] ?? null;
 
         if (! $dest) {
@@ -47,7 +43,7 @@ class CreateMigrationsAction
         }
 
         $dest = realpath(
-            str_replace('%%PHINX_CONFIG_DIR%%', APP_BASE_PATH, $dest)
+            str_replace('%%PHINX_CONFIG_DIR%%', $this->appBasePath, $dest)
         );
 
         if (! $dest) {

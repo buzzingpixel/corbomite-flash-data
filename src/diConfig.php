@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use buzzingpixel\cookieapi\CookieApi;
+use Composer\Autoload\ClassLoader;
 use corbomite\db\Factory as OrmFactory;
 use corbomite\db\PDO;
 use corbomite\flashdata\actions\CreateMigrationsAction;
@@ -18,9 +19,23 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 return [
     CreateMigrationsAction::class => static function () {
+        $appBasePath = null;
+
+        if (defined('APP_BASE_PATH')) {
+            $appBasePath = APP_BASE_PATH;
+        }
+
+        if (! $appBasePath) {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $reflection = new ReflectionClass(ClassLoader::class);
+
+            $appBasePath = dirname($reflection->getFileName(), 3);
+        }
+
         return new CreateMigrationsAction(
             __DIR__ . '/migrations',
-            new ConsoleOutput()
+            new ConsoleOutput(),
+            $appBasePath
         );
     },
     FlashDataApi::class => static function (ContainerInterface $di) {

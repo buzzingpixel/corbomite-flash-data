@@ -36,7 +36,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "corbomite\\tests\\": "tests/"
+            "corbomite\\tests\\": "tests/",
+            "corbomite\\tmp\\": "tmp"
         }
     },
     "config": {
