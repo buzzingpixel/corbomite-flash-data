@@ -18,6 +18,7 @@ use corbomite\flashdata\twigextensions\FlashDataTwigExtension;
 use Psr\Container\ContainerInterface;
 use Ramsey\Uuid\UuidFactory;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Filesystem\Filesystem;
 
 return [
     FlashDataApiInterface::class => static function (ContainerInterface $di) {
@@ -40,7 +41,8 @@ return [
         return new CreateMigrationsAction(
             __DIR__ . '/migrations',
             new ConsoleOutput(),
-            $appBasePath
+            $appBasePath,
+            new Filesystem()
         );
     },
     FlashDataApi::class => static function (ContainerInterface $di) {
