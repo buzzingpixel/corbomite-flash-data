@@ -63,7 +63,8 @@ class CreateMigrationsAction
 
         foreach ($iterator as $files) {
             foreach ($files as $file) {
-                $path     = $this->srcDir . '/' . $file;
+                $path = $this->srcDir . '/' . $file;
+
                 $destPath = $dest . '/' . $file;
 
                 if ($this->filesystem->exists($destPath)) {
