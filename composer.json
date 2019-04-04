@@ -13,10 +13,10 @@
     "require": {
         "php": ">=7.2",
         "ext-json": "*",
-        "buzzingpixel/corbomite-di": "^1.0",
-        "buzzingpixel/corbomite-migrations": "^1.0",
-        "buzzingpixel/corbomite-db": "^1.0",
-        "buzzingpixel/cookie-api": "^1.1.1",
+        "buzzingpixel/cookie-api": "^2.0",
+        "buzzingpixel/corbomite-db": "^1.3",
+        "buzzingpixel/corbomite-di": "^1.2",
+        "buzzingpixel/corbomite-migrations": "^1.1",
         "ramsey/uuid": "^3.8"
     },
     "require-dev": {

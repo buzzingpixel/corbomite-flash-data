@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2367f196ff3b5a08135108726192d3ff",
+    "content-hash": "379ed8b1618ea6d7330a9adad5ce8321",
     "packages": [
         {
             "name": "2bj/phanybar",
@@ -417,25 +417,26 @@
         },
         {
             "name": "buzzingpixel/cookie-api",
-            "version": "1.1.1",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/buzzingpixel/cookie-api.git",
-                "reference": "afd1556155e8ea424ea7ad67777367af3918c433"
+                "reference": "8c294fddd82b379732a1c06db0e93afd1cae31b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/buzzingpixel/cookie-api/zipball/afd1556155e8ea424ea7ad67777367af3918c433",
-                "reference": "afd1556155e8ea424ea7ad67777367af3918c433",
+                "url": "https://api.github.com/repos/buzzingpixel/cookie-api/zipball/8c294fddd82b379732a1c06db0e93afd1cae31b1",
+                "reference": "8c294fddd82b379732a1c06db0e93afd1cae31b1",
                 "shasum": ""
             },
             "require": {
                 "buzzingpixel/corbomite-di": "^1.0",
                 "ext-json": "*",
                 "ext-sodium": "*",
-                "php": ">=7.1"
+                "php": ">=7.2"
             },
             "require-dev": {
+                "codedungeon/phpunit-result-printer": "^0.26.1",
                 "phpmd/phpmd": "^2.6",
                 "phpunit/phpunit": "^7.5",
                 "roave/security-advisories": "dev-master",
@@ -451,10 +452,13 @@
             },
             "autoload": {
                 "psr-4": {
-                    "buzzingpixel\\cookieapi\\": "src"
+                    "buzzingpixel\\cookieapi\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
             "authors": [
                 {
                     "name": "TJ Draper",
@@ -463,7 +467,7 @@
                 }
             ],
             "description": "Cookie API",
-            "time": "2019-01-15T06:41:08+00:00"
+            "time": "2019-03-27T01:30:29+00:00"
         },
         {
             "name": "buzzingpixel/corbomite-cli",
