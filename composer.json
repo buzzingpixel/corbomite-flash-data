@@ -1,6 +1,7 @@
 {
     "name": "buzzingpixel/corbomite-flash-data",
     "version": "1.0.2",
+    "license": "Apache-2.0",
     "description": "Corbomite Flash Data",
     "authors": [
         {
