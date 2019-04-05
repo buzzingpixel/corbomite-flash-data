@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1858071ef96b4478abd084d8d92be8e2",
+    "content-hash": "42989270d1440cd87260aaf971bb8273",
     "packages": [
         {
             "name": "2bj/phanybar",
@@ -5504,5 +5504,7 @@
         "php": ">=7.2",
         "ext-json": "*"
     },
-    "platform-dev": []
+    "platform-dev": {
+        "ext-pdo": "*"
+    }
 }

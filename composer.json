@@ -21,6 +21,7 @@
         "symfony/filesystem": "^4.2"
     },
     "require-dev": {
+        "ext-PDO": "*",
         "buzzingpixel/corbomite-schedule": "^1.1",
         "codedungeon/phpunit-result-printer": "^0.26.2",
         "doctrine/coding-standard": "^6.0",
