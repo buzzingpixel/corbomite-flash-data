@@ -10,9 +10,9 @@ interface FlashDataStoreModelInterface
      * Returns the value of store, sets store if there is an incoming array value
      * Returns null if no store has been set yet
      *
-     * @param mixed[]|null $store
+     * @param FlashDataModelInterface[]|null $store
      *
-     * @return mixed[]|null
+     * @return FlashDataModelInterface[]|null
      */
     public function store(?array $store = null) : ?array;
 

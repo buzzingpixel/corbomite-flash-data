@@ -6,20 +6,31 @@ namespace corbomite\flashdata\models;
 
 use corbomite\flashdata\interfaces\FlashDataModelInterface;
 use corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
+use InvalidArgumentException;
 
 class FlashDataStoreModel implements FlashDataStoreModelInterface
 {
-    /** @var ?array */
+    /** @var FlashDataModelInterface[]|null */
     private $store;
 
     /**
-     * @param mixed[]|null $store
+     * @param FlashDataModelInterface[]|null $store
      *
-     * @return mixed[]|null
+     * @return FlashDataModelInterface[]|null
      */
     public function store(?array $store = null) : ?array
     {
         if ($store !== null) {
+            foreach ($store as $item) {
+                $isInstance = $item instanceof FlashDataModelInterface;
+
+                if (! $isInstance) {
+                    throw new InvalidArgumentException(
+                        '$store must be an array of FlashDataModelInterface'
+                    );
+                }
+            }
+
             $this->store = $store;
         }
 
