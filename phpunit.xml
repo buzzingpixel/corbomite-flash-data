@@ -21,6 +21,7 @@
             <exclude>
                 <file>src/diConfig.php</file>
                 <directory>src/data</directory>
+                <directory>src/migrations</directory>
             </exclude>
         </whitelist>
     </filter>
