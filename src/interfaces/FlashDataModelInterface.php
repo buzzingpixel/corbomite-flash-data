@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace corbomite\flashdata\interfaces;
 
-use DateTime;
+use DateTimeInterface;
 
 interface FlashDataModelInterface
 {
@@ -46,7 +46,7 @@ interface FlashDataModelInterface
 
     /**
      * Returns the value of addedAt, sets the value if there is an incoming
-     * DateTime object
+     * DateTimeInterface
      */
-    public function addedAt(?DateTime $addedAt = null) : ?DateTime;
+    public function addedAt(?DateTimeInterface $addedAt = null) : ?DateTimeInterface;
 }

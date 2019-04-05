@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace corbomite\flashdata\models;
 
 use corbomite\flashdata\interfaces\FlashDataModelInterface;
-use DateTime;
+use DateTimeInterface;
 
 class FlashDataModel implements FlashDataModelInterface
 {
@@ -62,10 +62,10 @@ class FlashDataModel implements FlashDataModelInterface
         return $this->data[$key] ?? null;
     }
 
-    /** @var ?DateTime */
+    /** @var ?DateTimeInterface */
     private $addedAt;
 
-    public function addedAt(?DateTime $addedAt = null) : ?DateTime
+    public function addedAt(?DateTimeInterface $addedAt = null) : ?DateTimeInterface
     {
         return $this->addedAt = $addedAt ?? $this->addedAt;
     }

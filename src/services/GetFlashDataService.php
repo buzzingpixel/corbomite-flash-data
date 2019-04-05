@@ -10,7 +10,7 @@ use corbomite\db\PDO;
 use corbomite\flashdata\data\FlashDatum\FlashDatum;
 use corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
 use corbomite\flashdata\models\FlashDataModel;
-use DateTime;
+use DateTimeImmutable;
 use DateTimeZone;
 use function is_array;
 use function json_decode;
@@ -67,7 +67,7 @@ class GetFlashDataService
             $data = json_decode($record->data, true);
 
             /** @noinspection PhpUnhandledExceptionInspection */
-            $addedAt = new DateTime(
+            $addedAt = new DateTimeImmutable(
                 $record->added_at,
                 new DateTimeZone($record->added_at_time_zone)
             );
