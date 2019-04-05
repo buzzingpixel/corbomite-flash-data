@@ -76,7 +76,7 @@ class GetFlashDataService
                 'guid' => $record->guid,
                 'name' => $record->name,
                 'data' => is_array($data) ? $data : [],
-                'addedAt' =>$addedAt,
+                'addedAt' => $addedAt,
             ]));
         }
 
