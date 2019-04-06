@@ -101,5 +101,5 @@ class FlashDatumTable extends Table
 
     const AUTOINC_COLUMN = null;
 
-    public const AUTOINC_SEQUENCE = null;
+    const AUTOINC_SEQUENCE = null;
 }
