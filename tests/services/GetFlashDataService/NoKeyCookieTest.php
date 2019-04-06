@@ -10,6 +10,7 @@ use corbomite\db\PDO;
 use corbomite\flashdata\models\FlashDataStoreModel;
 use corbomite\flashdata\services\GetFlashDataService;
 use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\UuidFactory;
 use Throwable;
 
 class NoKeyCookieTest extends TestCase
@@ -32,8 +33,16 @@ class NoKeyCookieTest extends TestCase
 
         $flashDataStoreModel = new FlashDataStoreModel();
 
+        $uuidFactory = self::createMock(UuidFactory::class);
+
         /** @noinspection PhpParamsInspection */
-        $service = new GetFlashDataService($pdo, $cookieApi, $ormFactory, $flashDataStoreModel);
+        $service = new GetFlashDataService(
+            $pdo,
+            $ormFactory,
+            $cookieApi,
+            $uuidFactory,
+            $flashDataStoreModel
+        );
 
         $returnData = $service();
 
