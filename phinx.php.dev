@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'paths' => [
+        'migrations' => '%%PHINX_CONFIG_DIR%%/data/migrations',
+        'seeds' => '%%PHINX_CONFIG_DIR%%/data/seeds'
+    ],
+    'environments' => [
+        'default_migration_table' => 'migrations',
+        'default_database' => 'production',
+        'production' => [
+            'adapter' => 'mysql',
+            'host' => 'db',
+            'name' => 'site',
+            'user' => 'site',
+            'pass' => 'secret',
+            'port' => '3306',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_general_ci',
+        ],
+    ],
+    'version_order' => 'creation'
+];

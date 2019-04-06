@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace corbomite\flashdata\models;
 
+use corbomite\db\traits\UuidTrait;
 use corbomite\flashdata\interfaces\FlashDataModelInterface;
 use DateTimeInterface;
 
 class FlashDataModel implements FlashDataModelInterface
 {
+    use UuidTrait;
+
     /**
      * @param mixed[] $props
      */
@@ -17,14 +20,6 @@ class FlashDataModel implements FlashDataModelInterface
         foreach ($props as $key => $val) {
             $this->{$key}($val);
         }
-    }
-
-    /** @var string */
-    private $guid = '';
-
-    public function guid(?string $guid = null) : string
-    {
-        return $this->guid = $guid ?? $this->guid;
     }
 
     /** @var string */

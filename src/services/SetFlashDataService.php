@@ -62,7 +62,7 @@ class SetFlashDataService
             /** @noinspection PhpUnhandledExceptionInspection */
             $keyCookie = $this->cookieApi->makeCookie(
                 'flash_data_key',
-                $this->uuidFactory->uuid4()->toString()
+                $this->uuidFactory->uuid1()->toString()
             );
 
             $this->cookieApi->saveCookie($keyCookie);
@@ -72,7 +72,7 @@ class SetFlashDataService
             throw new InvalidFlashDataModelException();
         }
 
-        $key  = $keyCookie->value();
+        $key  = $this->uuidFactory->fromString($keyCookie->value())->getBytes();
         $name = $model->name();
 
         $sql = 'DELETE FROM flash_data WHERE guid = :guid AND name = :name';

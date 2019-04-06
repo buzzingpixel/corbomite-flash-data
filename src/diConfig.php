@@ -16,7 +16,6 @@ use corbomite\flashdata\services\GetFlashDataService;
 use corbomite\flashdata\services\SetFlashDataService;
 use corbomite\flashdata\twigextensions\FlashDataTwigExtension;
 use Psr\Container\ContainerInterface;
-use Ramsey\Uuid\UuidFactory;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -53,15 +52,16 @@ return [
             $di->get(PDO::class),
             $di->get(CookieApi::class),
             new OrmFactory(),
-            new UuidFactory(),
+            $di->get('UuidFactoryWithOrderedTimeCodec'),
             $di->get(FlashDataStoreModel::class)
         );
     },
     GetFlashDataService::class => static function (ContainerInterface $di) {
         return new GetFlashDataService(
             $di->get(PDO::class),
-            $di->get(CookieApi::class),
             new OrmFactory(),
+            $di->get(CookieApi::class),
+            $di->get('UuidFactoryWithOrderedTimeCodec'),
             $di->get(FlashDataStoreModel::class)
         );
     },
