@@ -51,17 +51,17 @@ class NoKeyValueCookieNoModelNameTest extends TestCase
 
         $ormFactory = self::createMock(Factory::class);
 
-        $uuid4 = self::createMock(UuidInterface::class);
+        $uuid1 = self::createMock(UuidInterface::class);
 
-        $uuid4->expects(self::once())
+        $uuid1->expects(self::once())
             ->method('toString')
             ->willReturn('uuidString');
 
         $uuidFactory = self::createMock(UuidFactoryInterface::class);
 
         $uuidFactory->expects(self::once())
-            ->method('uuid4')
-            ->willReturn($uuid4);
+            ->method('uuid1')
+            ->willReturn($uuid1);
 
         $flashDataStoreModel = self::createMock(FlashDataStoreModelInterface::class);
 
