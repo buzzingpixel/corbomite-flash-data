@@ -7,33 +7,39 @@ namespace corbomite\tests\models;
 use corbomite\flashdata\models\FlashDataModel;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidFactory;
 use Throwable;
 
 class FlashDataModelTest extends TestCase
 {
+    /**
+     * @throws Throwable
+     */
     public function testGuid() : void
     {
-        self::assertEquals(
-            '',
-            (new FlashDataModel())->guid()
-        );
+        self::assertInstanceOf(Uuid::class, (new UuidFactory())->fromString((new FlashDataModel())->guid()));
 
-        $model = new FlashDataModel(['guid' => 'fooBar']);
+        $testGuid = (new UuidFactory())->uuid1()->toString();
+
+        $model = new FlashDataModel(['guid' => $testGuid]);
 
         self::assertEquals(
-            'fooBar',
+            $testGuid,
             $model->guid()
         );
 
         $model = new FlashDataModel();
 
+        $testGuid2 = (new UuidFactory())->uuid1()->toString();
+
         self::assertEquals(
-            'baz',
-            $model->guid('baz')
+            $testGuid2,
+            $model->guid($testGuid2)
         );
 
         self::assertEquals(
-            'baz',
+            $testGuid2,
             $model->guid()
         );
     }
