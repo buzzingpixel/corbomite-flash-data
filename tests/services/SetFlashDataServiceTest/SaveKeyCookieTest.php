@@ -18,6 +18,7 @@ use DateTime;
 use DateTimeZone;
 use PDOStatement;
 use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactoryInterface;
 use Throwable;
 
@@ -32,7 +33,7 @@ class SaveKeyCookieTest extends TestCase
 
         $q->expects(self::at(0))
             ->method('bindParam')
-            ->with(self::equalTo(':guid'), self::equalTo('TestCookieValue'));
+            ->with(self::equalTo(':guid'), self::equalTo('UuidBytesTest'));
 
         $q->expects(self::at(1))
             ->method('bindParam')
@@ -61,7 +62,7 @@ class SaveKeyCookieTest extends TestCase
 
         $record->expects(self::at(0))
             ->method('__set')
-            ->with(self::equalTo('guid'), self::equalTo('TestCookieValue'));
+            ->with(self::equalTo('guid'), self::equalTo('UuidBytesTest'));
 
         $record->expects(self::at(1))
             ->method('__set')
@@ -98,7 +99,18 @@ class SaveKeyCookieTest extends TestCase
             ->method('makeOrm')
             ->willReturn($orm);
 
+        $uuid = self::createMock(Uuid::class);
+
+        $uuid->expects(self::once())
+            ->method('getBytes')
+            ->willReturn('UuidBytesTest');
+
         $uuidFactory = self::createMock(UuidFactoryInterface::class);
+
+        $uuidFactory->expects(self::once())
+            ->method('fromString')
+            ->with(self::equalTo('TestCookieValue'))
+            ->willReturn($uuid);
 
         $model = self::createMock(FlashDataModelInterface::class);
 
