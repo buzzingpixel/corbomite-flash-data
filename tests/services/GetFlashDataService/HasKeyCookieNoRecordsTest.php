@@ -15,6 +15,8 @@ use corbomite\flashdata\models\FlashDataStoreModel;
 use corbomite\flashdata\services\GetFlashDataService;
 use PDOStatement;
 use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidFactory;
 use Throwable;
 
 class HasKeyCookieNoRecordsTest extends TestCase
@@ -28,7 +30,7 @@ class HasKeyCookieNoRecordsTest extends TestCase
 
         $q->expects(self::once())
             ->method('bindParam')
-            ->with(self::equalTo(':guid'), self::equalTo('bar'));
+            ->with(self::equalTo(':guid'), self::equalTo('UuidBytesTest'));
 
         $q->expects(self::once())
             ->method('execute');
@@ -54,8 +56,8 @@ class HasKeyCookieNoRecordsTest extends TestCase
         $mapperSelect->expects(self::once())
             ->method('where')
             ->with(
-                self::equalTo('guid ='),
-                self::equalTo('bar')
+                self::equalTo('guid = '),
+                self::equalTo('UuidBytesTest')
             )
             ->willReturn($mapperSelect);
 
@@ -78,8 +80,27 @@ class HasKeyCookieNoRecordsTest extends TestCase
 
         $flashDataStoreModel = new FlashDataStoreModel();
 
+        $uuid = self::createMock(Uuid::class);
+
+        $uuid->expects(self::once())
+            ->method('getBytes')
+            ->willReturn('UuidBytesTest');
+
+        $uuidFactory = self::createMock(UuidFactory::class);
+
+        $uuidFactory->expects(self::once())
+            ->method('fromString')
+            ->with(self::equalTo('bar'))
+            ->willReturn($uuid);
+
         /** @noinspection PhpParamsInspection */
-        $service = new GetFlashDataService($pdo, $cookieApi, $ormFactory, $flashDataStoreModel);
+        $service = new GetFlashDataService(
+            $pdo,
+            $ormFactory,
+            $cookieApi,
+            $uuidFactory,
+            $flashDataStoreModel
+        );
 
         $returnData = $service();
 
