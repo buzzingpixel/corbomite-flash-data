@@ -11,6 +11,7 @@ use corbomite\flashdata\FlashDataApi;
 use corbomite\flashdata\interfaces\FlashDataApiInterface;
 use corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
 use corbomite\flashdata\models\FlashDataStoreModel;
+use corbomite\flashdata\PhpCalls;
 use corbomite\flashdata\services\FlashDataGarbageCollectionService;
 use corbomite\flashdata\services\GetFlashDataService;
 use corbomite\flashdata\services\SetFlashDataService;
@@ -41,7 +42,8 @@ return [
             __DIR__ . '/migrations',
             new ConsoleOutput(),
             $appBasePath,
-            new Filesystem()
+            new Filesystem(),
+            new PhpCalls()
         );
     },
     FlashDataApi::class => static function (ContainerInterface $di) {

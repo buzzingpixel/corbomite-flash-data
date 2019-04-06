@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace corbomite\tests\actions\CreateMigrationsActionTest;
 
+use ArrayIterator;
 use corbomite\flashdata\actions\CreateMigrationsAction;
+use corbomite\flashdata\PhpCalls;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -17,9 +19,9 @@ class PhinxPathConfValidTest extends TestCase
      */
     public function test() : void
     {
-        $srcDir = TESTS_BASE_PATH . '/actions/CreateMigrationsActionTest/TestFiles/TestMigrationFiles';
+        $srcDir = '/test/src/dir';
 
-        $appBasePath = TESTS_BASE_PATH . '/actions/CreateMigrationsActionTest/TestFiles/PhinxPathConfValid';
+        $appBasePath = '/test/app/base/path';
 
         $output = self::createMock(OutputInterface::class);
 
@@ -48,23 +50,53 @@ class PhinxPathConfValidTest extends TestCase
 
         $fileSystem->expects(self::at(1))
             ->method('exists')
-            ->with(self::equalTo($appBasePath . '/migrations/MigFileOne.php'))
+            ->with(self::equalTo('/testRealPathReturn/MigFileOne.php'))
             ->willReturn(true);
 
         $fileSystem->expects(self::at(2))
             ->method('exists')
-            ->with(self::equalTo($appBasePath . '/migrations/MigFileTwo.php'))
+            ->with(self::equalTo('/testRealPathReturn/MigFileTwo.php'))
             ->willReturn(false);
 
         $fileSystem->expects(self::at(3))
             ->method('copy')
             ->with(
                 self::equalTo($srcDir . '/MigFileTwo.php'),
-                self::equalTo($appBasePath . '/migrations/MigFileTwo.php')
+                self::equalTo('/testRealPathReturn/MigFileTwo.php')
             );
 
+        $phpCalls = self::createMock(PhpCalls::class);
+
+        $phpCalls->expects(self::once())
+            ->method('include')
+            ->with(self::equalTo($appBasePath . '/phinx.php'))
+            ->willReturn([
+                'paths' => ['migrations' => '%%PHINX_CONFIG_DIR%%/migrations'],
+            ]);
+
+        $phpCalls->expects(self::once())
+            ->method('realpath')
+            ->with(self::equalTo($appBasePath . '/migrations'))
+            ->willReturn('/testRealPathReturn');
+
+        $iterator = new ArrayIterator([
+            ['MigFileOne.php'],
+            ['MigFileTwo.php'],
+        ]);
+
+        $phpCalls->expects(self::once())
+            ->method('getRegexIterator')
+            ->with(self::equalTo($srcDir), self::equalTo('/^.+\.php$/i'))
+            ->willReturn($iterator);
+
         /** @noinspection PhpParamsInspection */
-        $createMigrationsAction = new CreateMigrationsAction($srcDir, $output, $appBasePath, $fileSystem);
+        $createMigrationsAction = new CreateMigrationsAction(
+            $srcDir,
+            $output,
+            $appBasePath,
+            $fileSystem,
+            $phpCalls
+        );
 
         $createMigrationsAction();
     }

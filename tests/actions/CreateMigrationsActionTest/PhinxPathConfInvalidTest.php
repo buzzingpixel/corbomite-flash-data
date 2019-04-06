@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace corbomite\tests\actions\CreateMigrationsActionTest;
 
 use corbomite\flashdata\actions\CreateMigrationsAction;
+use corbomite\flashdata\PhpCalls;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,7 +23,7 @@ class PhinxPathConfInvalidTest extends TestCase
 
         $output = self::createMock(OutputInterface::class);
 
-        $appBasePath = TESTS_BASE_PATH . '/actions/CreateMigrationsActionTest/TestFiles/PhinxPathConfInvalid';
+        $appBasePath = '/test/base/path';
 
         $fileSystem = self::createMock(Filesystem::class);
 
@@ -31,8 +32,28 @@ class PhinxPathConfInvalidTest extends TestCase
             ->with(self::equalTo($appBasePath . '/phinx.php'))
             ->willReturn(true);
 
+        $phpCalls = self::createMock(PhpCalls::class);
+
+        $phpCalls->expects(self::once())
+            ->method('include')
+            ->with(self::equalTo($appBasePath . '/phinx.php'))
+            ->willReturn([
+                'paths' => ['migrations' => '%%PHINX_CONFIG_DIR%%/migrations'],
+            ]);
+
+        $phpCalls->expects(self::once())
+            ->method('realpath')
+            ->with(self::equalTo($appBasePath . '/migrations'))
+            ->willReturn(false);
+
         /** @noinspection PhpParamsInspection */
-        $createMigrationsAction = new CreateMigrationsAction($srcDir, $output, $appBasePath, $fileSystem);
+        $createMigrationsAction = new CreateMigrationsAction(
+            $srcDir,
+            $output,
+            $appBasePath,
+            $fileSystem,
+            $phpCalls
+        );
 
         $exception = null;
 

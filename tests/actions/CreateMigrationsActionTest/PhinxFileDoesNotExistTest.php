@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace corbomite\tests\actions\CreateMigrationsActionTest;
 
 use corbomite\flashdata\actions\CreateMigrationsAction;
+use corbomite\flashdata\PhpCalls;
 use LogicException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,8 +32,16 @@ class PhinxFileDoesNotExistTest extends TestCase
             ->with(self::equalTo($appBasePath . '/phinx.php'))
             ->willReturn(false);
 
+        $phpCalls = self::createMock(PhpCalls::class);
+
         /** @noinspection PhpParamsInspection */
-        $createMigrationsAction = new CreateMigrationsAction($srcDir, $output, $appBasePath, $fileSystem);
+        $createMigrationsAction = new CreateMigrationsAction(
+            $srcDir,
+            $output,
+            $appBasePath,
+            $fileSystem,
+            $phpCalls
+        );
 
         $exception = null;
 
