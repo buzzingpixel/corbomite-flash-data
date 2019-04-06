@@ -10,12 +10,15 @@ use buzzingpixel\cookieapi\interfaces\CookieApiInterface;
 use corbomite\db\Factory;
 use corbomite\db\Orm;
 use corbomite\db\PDO;
+use corbomite\di\Di;
 use corbomite\flashdata\data\FlashDatum\FlashDatum;
 use corbomite\flashdata\models\FlashDataStoreModel;
 use corbomite\flashdata\services\GetFlashDataService;
 use DateTime;
 use DateTimeZone;
 use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidFactory;
 use stdClass;
 use Throwable;
 
@@ -45,29 +48,39 @@ class HasKeyCookieWithRecordsTest extends TestCase
         $mapperSelect->expects(self::once())
             ->method('where')
             ->with(
-                self::equalTo('guid ='),
-                self::equalTo('bar')
+                self::equalTo('guid = '),
+                self::equalTo('UuidBytesTest')
             )
             ->willReturn($mapperSelect);
 
         $recordOneDate = new DateTime();
         $recordOneDate->setTimezone(new DateTimeZone('UTC'));
 
+        /** @var Uuid $guidOne */
+        $guidOne       = Di::diContainer()->get('UuidFactoryWithOrderedTimeCodec')->uuid1();
+        $guidOneString = $guidOne->toString();
+        $guidOneBytes  = $guidOne->getBytes();
+
         $recordOne                     = new stdClass();
         $recordOne->data               = '{"data": "thing"}';
         $recordOne->added_at           = $recordOneDate->format('Y-m-d H:i:s');
         $recordOne->added_at_time_zone = $recordOneDate->getTimezone()->getName();
-        $recordOne->guid               = 'guidOne';
+        $recordOne->guid               = $guidOneBytes;
         $recordOne->name               = 'guidOneName';
 
         $recordTwoDate = new DateTime();
         $recordTwoDate->setTimezone(new DateTimeZone('UTC'));
 
+        /** @var Uuid $guidTwo */
+        $guidTwo       = Di::diContainer()->get('UuidFactoryWithOrderedTimeCodec')->uuid1();
+        $guidTwoString = $guidTwo->toString();
+        $guidTwoBytes  = $guidTwo->getBytes();
+
         $recordTwo                     = new stdClass();
         $recordTwo->data               = '';
         $recordTwo->added_at           = $recordTwoDate->format('Y-m-d H:i:s');
         $recordTwo->added_at_time_zone = $recordTwoDate->getTimezone()->getName();
-        $recordTwo->guid               = 'guidTwo';
+        $recordTwo->guid               = $guidTwoBytes;
         $recordTwo->name               = 'guidTwoName';
 
         $mapperSelect->expects(self::once())
@@ -89,8 +102,27 @@ class HasKeyCookieWithRecordsTest extends TestCase
 
         $flashDataStoreModel = new FlashDataStoreModel();
 
+        $uuid = self::createMock(Uuid::class);
+
+        $uuid->expects(self::once())
+            ->method('getBytes')
+            ->willReturn('UuidBytesTest');
+
+        $uuidFactory = self::createMock(UuidFactory::class);
+
+        $uuidFactory->expects(self::once())
+            ->method('fromString')
+            ->with(self::equalTo('bar'))
+            ->willReturn($uuid);
+
         /** @noinspection PhpParamsInspection */
-        $service = new GetFlashDataService($pdo, $cookieApi, $ormFactory, $flashDataStoreModel);
+        $service = new GetFlashDataService(
+            $pdo,
+            $ormFactory,
+            $cookieApi,
+            $uuidFactory,
+            $flashDataStoreModel
+        );
 
         $returnData = $service(false);
 
@@ -100,9 +132,9 @@ class HasKeyCookieWithRecordsTest extends TestCase
 
         $two = $returnData->getStoreItem('guidTwoName');
 
-        self::assertEquals('guidOne', $one->guid());
+        self::assertEquals($guidOneString, $one->guid());
 
-        self::assertEquals('guidTwo', $two->guid());
+        self::assertEquals($guidTwoString, $two->guid());
 
         self::assertEquals('guidOneName', $one->name());
 
