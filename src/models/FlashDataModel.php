@@ -1,22 +1,20 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\flashdata\models;
 
-use DateTime;
 use corbomite\db\traits\UuidTrait;
 use corbomite\flashdata\interfaces\FlashDataModelInterface;
+use DateTimeInterface;
 
 class FlashDataModel implements FlashDataModelInterface
 {
     use UuidTrait;
 
+    /**
+     * @param mixed[] $props
+     */
     public function __construct(array $props = [])
     {
         foreach ($props as $key => $val) {
@@ -24,20 +22,32 @@ class FlashDataModel implements FlashDataModelInterface
         }
     }
 
+    /** @var string */
     private $name = '';
 
-    public function name(?string $name = null): string
+    public function name(?string $name = null) : string
     {
         return $this->name = $name ?? $this->name;
     }
 
+    /** @var mixed[] */
     private $data = [];
 
-    public function data(?array $data = null): array
+    /**
+     * @param mixed[]|null $data
+     *
+     * @return mixed[]
+     */
+    public function data(?array $data = null) : array
     {
         return $this->data = $data ?? $this->data;
     }
 
+    /**
+     * @param mixed $val
+     *
+     * @return mixed
+     */
     public function dataItem(string $key, $val = null)
     {
         if ($val !== null) {
@@ -47,10 +57,10 @@ class FlashDataModel implements FlashDataModelInterface
         return $this->data[$key] ?? null;
     }
 
-    /** @var \DateTime|null */
+    /** @var ?DateTimeInterface */
     private $addedAt;
 
-    public function addedAt(?DateTime $addedAt = null): ?DateTime
+    public function addedAt(?DateTimeInterface $addedAt = null) : ?DateTimeInterface
     {
         return $this->addedAt = $addedAt ?? $this->addedAt;
     }

@@ -1,16 +1,11 @@
 <?php
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 return [
     'paths' => [
-        // 'migrations' => '%%PHINX_CONFIG_DIR%%/src/migrations',
-        'migrations' => '%%PHINX_CONFIG_DIR%%/tmp/migrations',
-        'seeds' => '%%PHINX_CONFIG_DIR%%/src/seeds'
+        'migrations' => '%%PHINX_CONFIG_DIR%%/data/migrations',
+        'seeds' => '%%PHINX_CONFIG_DIR%%/data/seeds'
     ],
     'environments' => [
         'default_migration_table' => 'migrations',

@@ -1,33 +1,32 @@
 <?php
-declare(strict_types=1);
 
-/**
- * @author TJ Draper <tj@buzzingpixel.com>
- * @copyright 2019 BuzzingPixel, LLC
- * @license Apache-2.0
- */
+declare(strict_types=1);
 
 namespace corbomite\flashdata;
 
-use corbomite\di\Di;
+use corbomite\flashdata\exceptions\InvalidFlashDataModelException;
+use corbomite\flashdata\interfaces\FlashDataApiInterface;
+use corbomite\flashdata\interfaces\FlashDataModelInterface;
+use corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
 use corbomite\flashdata\models\FlashDataModel;
 use corbomite\flashdata\services\GetFlashDataService;
 use corbomite\flashdata\services\SetFlashDataService;
-use corbomite\flashdata\interfaces\FlashDataApiInterface;
-use corbomite\flashdata\interfaces\FlashDataModelInterface;
-use corbomite\flashdata\exceptions\InvalidFlashDataModelException;
-use \corbomite\flashdata\interfaces\FlashDataStoreModelInterface;
+use Psr\Container\ContainerInterface;
 
 class FlashDataApi implements FlashDataApiInterface
 {
+    /** @var ContainerInterface */
     private $di;
 
-    public function __construct(Di $di)
+    public function __construct(ContainerInterface $di)
     {
         $this->di = $di;
     }
 
-    public function makeFlashDataModel(array $props = []): FlashDataModelInterface
+    /**
+     * @param mixed[] $props
+     */
+    public function makeFlashDataModel(array $props = []) : FlashDataModelInterface
     {
         return new FlashDataModel($props);
     }
@@ -35,16 +34,14 @@ class FlashDataApi implements FlashDataApiInterface
     /**
      * @throws InvalidFlashDataModelException
      */
-    public function setFlashData(FlashDataModelInterface $model): void
+    public function setFlashData(FlashDataModelInterface $model) : void
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $this->di->getFromDefinition(SetFlashDataService::class)->set($model);
+        $this->di->get(SetFlashDataService::class)->set($model);
     }
 
-    public function getFlashData(bool $clearData = true): FlashDataStoreModelInterface
+    public function getFlashData(bool $clearData = true) : FlashDataStoreModelInterface
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        return $this->di->getFromDefinition(GetFlashDataService::class)->get(
+        return $this->di->get(GetFlashDataService::class)->get(
             $clearData
         );
     }
